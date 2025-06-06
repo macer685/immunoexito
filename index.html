@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Pedido Final</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* ----- Variables de Color Estilo WhatsApp ----- */
+            --whatsapp-primary-green: #25D366;
+            --whatsapp-dark-green: #075E54;
+            --whatsapp-light-green-bg: #DCF8C6;
+            --whatsapp-chat-background: #E5DDD5;
+            --whatsapp-text-primary: #111B21;
+            --whatsapp-text-secondary: #54656f;
+            --whatsapp-border-color: #D1D7DB;
+            --whatsapp-focus-color: #128C7E;
+            --font-family: 'Open Sans', sans-serif;
+            --font-weight-bold: 600;
+            --font-size-header: 22px;
+            --border-radius-card: 8px;
+            --border-radius-input: 6px;
+        }
+
+        /* ----- Estilos Generales ----- */
+        body {
+            font-family: var(--font-family);
+            background-color: var(--whatsapp-chat-background);
+            color: var(--whatsapp-text-primary);
+            margin: 0;
+            padding: 24px 16px;
+            display: flex;
+            justify-content: center;
+        }
+        .form-container {
+            width: 100%;
+            max-width: 480px;
+        }
+        .card {
+            background-color: var(--whatsapp-light-green-bg); 
+            border: 1px solid #a5d7a7;
+            border-radius: var(--border-radius-card);
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* ----- Encabezado y Separadores ----- */
+        .form-header { text-align: center; margin-bottom: 32px; }
+        .form-header h1 { color: var(--whatsapp-dark-green); font-size: var(--font-size-header); font-weight: var(--font-weight-bold); margin: 0; }
+        .form-header p { color: var(--whatsapp-text-secondary); margin-top: 4px; }
+        .section-title {
+            font-size: 1rem;
+            font-weight: var(--font-weight-bold);
+            color: var(--whatsapp-dark-green);
+            margin-top: 2rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #b7e3b9;
+        }
+        .section-title:first-of-type {
+            margin-top: 0;
+        }
+
+        /* ----- Estilos para campos de texto ----- */
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+        label { 
+            display: block; 
+            margin-bottom: 0.5rem; 
+            color: var(--whatsapp-dark-green); 
+            font-weight: var(--font-weight-bold); 
+            font-size: 14px; 
+        }
+        input[type="text"], input[type="email"], input[type="tel"], input[type="date"] {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 0.8rem;
+            border: 1px solid #b7e3b9;
+            border-radius: var(--border-radius-input);
+            font-size: 1rem;
+            color: var(--whatsapp-text-primary);
+            font-family: var(--font-family);
+            background-color: #ffffff;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        input:focus {
+            outline: none;
+            border-color: var(--whatsapp-focus-color);
+            box-shadow: 0 0 0 3px rgba(18, 140, 126, 0.1);
+        }
+        input:invalid { border-color: #E53E3E; }
+        
+        /* ----- Estilos para Deslizadores de Productos ----- */
+        .product-list { display: flex; flex-direction: column; gap: 28px; }
+        .product-item { display: flex; flex-direction: column; }
+        .product-info { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
+        .product-name { font-size: 16px; font-weight: var(--font-weight-bold); color: var(--whatsapp-text-primary); }
+        .quantity-display { font-size: 16px; font-weight: var(--font-weight-bold); color: #ffffff; background-color: var(--whatsapp-primary-green); padding: 4px 10px; border-radius: 12px; min-width: 20px; text-align: center; }
+        input[type="range"] { -webkit-appearance: none; width: 100%; height: 8px; background: #ffffff; border-radius: 5px; outline: none; cursor: pointer; border: 1px solid #c8e8ca; }
+        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; background: var(--whatsapp-primary-green); border-radius: 50%; border: 2px solid white; box-shadow: 0 0 4px rgba(0,0,0,0.2); }
+        input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; background: var(--whatsapp-primary-green); border-radius: 50%; border: 2px solid white; box-shadow: 0 0 4px rgba(0,0,0,0.2); cursor: pointer; }
+
+        /* ----- Botón de Envío y Mensaje de Agradecimiento ----- */
+        .submit-btn { width: 100%; height: 48px; background-color: var(--whatsapp-dark-green); color: #ffffff; font-size: 1rem; font-weight: var(--font-weight-bold); border: none; border-radius: var(--border-radius-input); cursor: pointer; transition: background-color 0.2s; margin-top: 32px; }
+        .submit-btn:hover { background-color: #064b42; }
+        #thank-you-message { text-align: center; padding: 40px; color: var(--whatsapp-dark-green); font-size: 1.2em; font-weight: bold; display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <div class="card">
+            
+            <div id="form-wrapper">
+                <div class="form-header">
+                    <h1>Completa tu Pedido</h1>
+                    <p>Tus  datos quedaron seguros, por favor vuelve al chat para continuar con las formas de pago;no olvides decirle a wendy que ya enviaste todos tus datos, para poder continuar con el pedido..</p>
+                </div>
+                
+                <form id="pedido-form">
+
+                    <h2 class="section-title">1. Elige tus Productos</h2>
+                    <div class="product-list">
+                        <div class="product-item">
+                            <div class="product-info"><span class="product-name">Immunocal Clásico</span><span id="quantity-display-1" class="quantity-display">0</span></div>
+                            <input type="range" class="quantity-slider" name="immunocal_clasico" min="0" max="20" value="0" data-display="quantity-display-1">
+                        </div>
+                        <div class="product-item">
+                            <div class="product-info"><span class="product-name">Immunocal Platinum</span><span id="quantity-display-2" class="quantity-display">0</span></div>
+                            <input type="range" class="quantity-slider" name="immunocal_platinum" min="0" max="20" value="0" data-display="quantity-display-2">
+                        </div>
+                        <div class="product-item">
+                            <div class="product-info"><span class="product-name">Immunocal Frutos Rojos</span><span id="quantity-display-3" class="quantity-display">0</span></div>
+                            <input type="range" class="quantity-slider" name="immunocal_frutos" min="0" max="20" value="0" data-display="quantity-display-3">
+                        </div>
+                        <div class="product-item">
+                            <div class="product-info"><span class="product-name">Optimizer Performance</span><span id="quantity-display-4" class="quantity-display">0</span></div>
+                            <input type="range" class="quantity-slider" name="optimizer_performance" min="0" max="20" value="0" data-display="quantity-display-4">
+                        </div>
+                    </div>
+
+                    <h2 class="section-title">2. Datos de Envío</h2>
+                    <div class="form-group">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" id="nombre" name="nombre" required maxlength="50" pattern="[A-Za-zÀ-ÿ\s]+" title="Solo se permiten letras y espacios.">
+                    </div>
+                    <div class="form-group">
+                        <label for="apellido">Apellido</label>
+                        <input type="text" id="apellido" name="apellido" required maxlength="50" pattern="[A-Za-zÀ-ÿ\s]+" title="Solo se permiten letras y espacios.">
+                    </div>
+                    <div class="form-group">
+                        <label for="correo">Correo Electrónico</label>
+                        <input type="email" id="correo" name="correo" required maxlength="100">
+                    </div>
+                    <div class="form-group">
+                        <label for="celular">Celular (10 dígitos)</label>
+                        <input type="tel" id="celular" name="celular" required pattern="^3[0-9]{9}$" maxlength="10" placeholder="Ej: 3001234567" title="Ingresa un número de celular colombiano válido de 10 dígitos (ej: 3001234567).">
+                    </div>
+                    <div class="form-group">
+                        <label for="direccion">Dirección de Envío</label>
+                        <input type="text" id="direccion" name="direccion" required maxlength="150">
+                    </div>
+                    <div class="form-group">
+                        <label for="fecha_pedido">Fecha del Pedido</label>
+                        <input type="date" id="fecha_pedido" name="fecha_pedido" required>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Finalizar y Enviar Pedido</button>
+                    
+                </form>
+            </div>
+            
+            <div id="thank-you-message">
+                <p>¡Gracias! Tu pedido ha sido enviado correctamente.</p>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            document.getElementById('fecha_pedido').value = new Date().toISOString().split('T')[0];
+            
+            const sliders = document.querySelectorAll('.quantity-slider');
+            sliders.forEach(slider => {
+                slider.addEventListener('input', function() {
+                    const displayId = this.getAttribute('data-display');
+                    const displayElement = document.getElementById(displayId);
+                    displayElement.textContent = this.value;
+                });
+            });
+
+            const pedidoForm = document.getElementById('pedido-form');
+            pedidoForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                // --- Validación de Productos ---
+                let totalQuantity = 0;
+                const sliders = document.querySelectorAll('.quantity-slider');
+                sliders.forEach(slider => {
+                    totalQuantity += parseInt(slider.value, 10);
+                });
+                
+                if (totalQuantity === 0) {
+                    alert('Por favor, selecciona una cantidad de al menos un producto para poder realizar el pedido.');
+                    return; 
+                }
+                // --- Fin de la Validación ---
+
+                const webhookUrl = 'https://n8n.macer.digital/webhook-test/Iwwuno3xito';
+                const formData = new FormData(pedidoForm);
+                const submitButton = pedidoForm.querySelector('.submit-btn');
+                
+                submitButton.textContent = 'Enviando...';
+                submitButton.disabled = true;
+
+                fetch(webhookUrl, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (response.ok) {
+                        document.getElementById('form-wrapper').style.display = 'none';
+                        document.getElementById('thank-you-message').style.display = 'block';
+                    } else {
+                        alert('Hubo un error al registrar tu pedido. Por favor, inténtalo de nuevo.');
+                        submitButton.textContent = 'Finalizar y Enviar Pedido';
+                        submitButton.disabled = false;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error de conexión:', error);
+                    alert('Hubo un error de conexión. Por favor, revisa tu internet e inténtalo de nuevo.');
+                    submitButton.textContent = 'Finalizar y Enviar Pedido';
+                    submitButton.disabled = false;
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
