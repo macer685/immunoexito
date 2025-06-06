@@ -183,123 +183,66 @@
     </div>
 
    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        
-        // --- LÓGICA EXISTENTE ---
-        document.getElementById('fecha_pedido').value = new Date().toISOString().split('T')[0];
-        const sliders = document.querySelectorAll('.quantity-slider');
-
-        // --- NUEVO: Precios definidos fuera para ser reutilizados ---
-        const precios = {
-            "immunocal_clasico": 270000,
-            "immunocal_platinum": 350000,
-            "immunocal_frutos": 180000,
-            "optimizer_performance": 150000
-        };
-
-        // --- NUEVO: Función para calcular y mostrar el total ---
-        function actualizarTotal() {
-            let costoTotal = 0;
-            sliders.forEach(slider => {
-                const cantidad = parseInt(slider.value, 10);
-                const nombreTecnico = slider.name;
-                const precioUnitario = precios[nombreTecnico] || 0;
-                costoTotal += cantidad * precioUnitario;
-            });
-
-            // Formatea el número como moneda colombiana (sin decimales)
-            const formatoMoneda = new Intl.NumberFormat('es-CO', {
-                style: 'currency',
-                currency: 'COP',
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0
-            });
+        document.addEventListener('DOMContentLoaded', function() {
             
-            document.getElementById('total-pedido-display').textContent = formatoMoneda.format(costoTotal);
-        }
-
-        // --- LÓGICA MODIFICADA ---
-        // Ahora, cada vez que un slider se mueve, actualizamos su número y el total general.
-        sliders.forEach(slider => {
-            slider.addEventListener('input', function() {
-                const displayId = this.getAttribute('data-display');
-                document.getElementById(displayId).textContent = this.value;
-                actualizarTotal(); // <--- Llamada a la nueva función
-            });
-        });
-
-        const pedidoForm = document.getElementById('pedido-form');
-        pedidoForm.addEventListener('submit', function(event) {
-            event.preventDefault();
+            document.getElementById('fecha_pedido').value = new Date().toISOString().split('T')[0];
             
-            // La lógica de validación y envío se mantiene igual que antes
-            let totalQuantity = 0;
-            const productosSeleccionados = [];
+            const sliders = document.querySelectorAll('.quantity-slider');
             sliders.forEach(slider => {
-                const cantidad = parseInt(slider.value, 10);
-                if (cantidad > 0) {
-                    totalQuantity += cantidad;
-                    const nombreProducto = slider.getAttribute('data-name');
-                    const nombreTecnico = slider.name;
-                    const precioUnitario = precios[nombreTecnico] || 0;
-                    
-                    productosSeleccionados.push({
-                        producto: nombreProducto,
-                        cantidad: cantidad,
-                        precio_unitario: precioUnitario,
-                        precio_total: cantidad * precioUnitario
-                    });
+                slider.addEventListener('input', function() {
+                    const displayId = this.getAttribute('data-display');
+                    const displayElement = document.getElementById(displayId);
+                    displayElement.textContent = this.value;
+                });
+            });
+
+            const pedidoForm = document.getElementById('pedido-form');
+            pedidoForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                // --- Validación de Productos ---
+                let totalQuantity = 0;
+                const sliders = document.querySelectorAll('.quantity-slider');
+                sliders.forEach(slider => {
+                    totalQuantity += parseInt(slider.value, 10);
+                });
+                
+                if (totalQuantity === 0) {
+                    alert('Por favor, selecciona una cantidad de al menos un producto para poder realizar el pedido.');
+                    return; 
                 }
-            });
+                // --- Fin de la Validación ---
 
-            if (totalQuantity === 0) {
-                alert('Por favor, selecciona una cantidad de al menos un producto para poder realizar el pedido.');
-                return; 
-            }
-            
-            const formData = new FormData(pedidoForm);
-            const datosCliente = {};
-            ['nombre', 'apellido', 'correo', 'celular', 'direccion', 'fecha_pedido'].forEach(key => {
-                datosCliente[key] = formData.get(key);
-            });
-            
-            const payload = {
-                ...datosCliente,
-                productos: productosSeleccionados,
-                resumen_pedido: productosSeleccionados.map(p => ` - ${p.producto} (x${p.cantidad})`).join('\n'),
-                costo_total_pedido: productosSeleccionados.reduce((total, p) => total + p.precio_total, 0)
-            };
-            
-            const webhookUrl = 'https://n8n.macer.digital/webhook-test/Iwwuno3xito';
-            const submitButton = pedidoForm.querySelector('.submit-btn');
-            
-            submitButton.textContent = 'Enviando...';
-            submitButton.disabled = true;
+                const webhookUrl = 'https://n8n.macer.digital/webhook-test/Iwwuno3xito';
+                const formData = new FormData(pedidoForm);
+                const submitButton = pedidoForm.querySelector('.submit-btn');
+                
+                submitButton.textContent = 'Enviando...';
+                submitButton.disabled = true;
 
-            fetch(webhookUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            })
-            .then(response => {
-                if (response.ok) {
-                    document.getElementById('form-wrapper').style.display = 'none';
-                    document.getElementById('thank-you-message').style.display = 'block';
-                } else {
-                    alert('Hubo un error al registrar tu pedido. Por favor, inténtalo de nuevo.');
+                fetch(webhookUrl, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (response.ok) {
+                        document.getElementById('form-wrapper').style.display = 'none';
+                        document.getElementById('thank-you-message').style.display = 'block';
+                    } else {
+                        alert('Hubo un error al registrar tu pedido. Por favor, inténtalo de nuevo.');
+                        submitButton.textContent = 'Finalizar y Enviar Pedido';
+                        submitButton.disabled = false;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error de conexión:', error);
+                    alert('Hubo un error de conexión. Por favor, revisa tu internet e inténtalo de nuevo.');
                     submitButton.textContent = 'Finalizar y Enviar Pedido';
                     submitButton.disabled = false;
-                }
-            })
-            .catch(error => {
-                console.error('Error de conexión:', error);
-                alert('Hubo un error de conexión. Por favor, revisa tu internet e inténtalo de nuevo.');
-                submitButton.textContent = 'Finalizar y Enviar Pedido';
-                submitButton.disabled = false;
+                });
             });
         });
-    });
-</script>
+    </script>
 
 </body>
 </html>
