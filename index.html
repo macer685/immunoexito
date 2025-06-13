@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -35,6 +36,8 @@
             padding: 24px 16px;
             display: flex;
             justify-content: center;
+            min-height: 100vh; /* Para que el fondo cubra toda la altura */
+            align-items: center; /* Centrar verticalmente en la página */
         }
         .form-container {
             width: 100%;
@@ -119,42 +122,49 @@
             <div id="form-wrapper">
                 <div class="form-header">
                     <h1>Completa tu Pedido</h1>
-                    <p>Tus  datos Estan seguros. .</p>
+                    <p>Tus datos están seguros.</p>
                 </div>
                 
                 <form id="pedido-form">
 
                     <h2 class="section-title">1. Elige tus Productos</h2>
-                  <div class="product-list">
-    <div class="product-item">
-        <div class="product-info">
-            <span class="product-name">Immunocal Clásico</span>
-            <span id="quantity-display-1" class="quantity-display">0</span>
-        </div>
-        <input type="range" class="quantity-slider" data-name="Immunocal Clásico" name="immunocal_clasico" min="0" max="20" value="0" data-display="quantity-display-1">
-    </div>
-    <div class="product-item">
-        <div class="product-info">
-            <span class="product-name">Immunocal Platinum</span>
-            <span id="quantity-display-2" class="quantity-display">0</span>
-        </div>
-        <input type="range" class="quantity-slider" data-name="Immunocal Platinum" name="immunocal_platinum" min="0" max="20" value="0" data-display="quantity-display-2">
-    </div>
-    <div class="product-item">
-        <div class="product-info">
-            <span class="product-name">Immunocal Frutos Rojos</span>
-            <span id="quantity-display-3" class="quantity-display">0</span>
-        </div>
-        <input type="range" class="quantity-slider" data-name="Immunocal Frutos Rojos" name="immunocal_frutos" min="0" max="20" value="0" data-display="quantity-display-3">
-    </div>
-    <div class="product-item">
-        <div class="product-info">
-            <span class="product-name">Optimizer Performance</span>
-            <span id="quantity-display-4" class="quantity-display">0</span>
-        </div>
-        <input type="range" class="quantity-slider" data-name="Optimizer Performance" name="optimizer_performance" min="0" max="20" value="0" data-display="quantity-display-4">
-    </div>
-</div>
+                    <div class="product-list">
+                        <div class="product-item">
+                            <div class="product-info">
+                                <span class="product-name">Immunocal Clásico</span>
+                                <span id="quantity-display-1" class="quantity-display">0</span>
+                            </div>
+                            <input type="range" class="quantity-slider" data-name="Immunocal Clásico" name="immunocal_clasico" min="0" max="20" value="0" data-display="quantity-display-1">
+                        </div>
+                        <div class="product-item">
+                            <div class="product-info">
+                                <span class="product-name">Immunocal Platinum</span>
+                                <span id="quantity-display-2" class="quantity-display">0</span>
+                            </div>
+                            <input type="range" class="quantity-slider" data-name="Immunocal Platinum" name="immunocal_platinum" min="0" max="20" value="0" data-display="quantity-display-2">
+                        </div>
+                        <div class="product-item">
+                            <div class="product-info">
+                                <span class="product-name">Immunocal Frutos Rojos</span>
+                                <span id="quantity-display-3" class="quantity-display">0</span>
+                            </div>
+                            <input type="range" class="quantity-slider" data-name="Immunocal Frutos Rojos" name="immunocal_frutos" min="0" max="20" value="0" data-display="quantity-display-3">
+                        </div>
+                        <div class="product-item">
+                            <div class="product-info">
+                                <span class="product-name">Optimizer Performance</span>
+                                <span id="quantity-display-4" class="quantity-display">0</span>
+                            </div>
+                            <input type="range" class="quantity-slider" data-name="Optimizer Performance" name="optimizer_performance" min="0" max="20" value="0" data-display="quantity-display-4">
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="text-align: right; margin-top: 2rem;">
+                        <label style="font-size: 1.1em; color: var(--whatsapp-dark-green);">Costo Total del Pedido:</label>
+                        <span id="total-pedido-display" style="font-size: 1.4em; font-weight: var(--font-weight-bold); color: var(--whatsapp-primary-green);">
+                            $0
+                        </span>
+                    </div>
 
                     <h2 class="section-title">2. Datos de Envío</h2>
                     <div class="form-group">
@@ -188,20 +198,21 @@
             </div>
             
             <div id="thank-you-message">
-                <p>¡Gracias! Tu pedido ha sido enviado correctamente y tus datos quedaron resguardados por favor vuelve al chat para continuar con las formas de pago; no olvides decirle a wendy que ya enviaste todos tus datos, para poder continuar con el pedido.</p>
+                <p>¡Gracias! Tu pedido ha sido enviado correctamente y tus datos quedaron resguardados por favor vuelve al chat para continuar con las formas de pago; no olvides decirle a Wendy que ya enviaste todos tus datos, para poder continuar con el pedido.</p>
             </div>
 
         </div>
     </div>
 
-  <script>
+ <script>
     document.addEventListener('DOMContentLoaded', function() {
-        
-        // --- LÓGICA EXISTENTE ---
+        // Asigna la fecha actual al campo de fecha de pedido
         document.getElementById('fecha_pedido').value = new Date().toISOString().split('T')[0];
+        
+        // Obtiene todos los sliders de cantidad de productos
         const sliders = document.querySelectorAll('.quantity-slider');
 
-        // --- NUEVO: Precios definidos fuera para ser reutilizados ---
+        // Define los precios de los productos
         const precios = {
             "immunocal_clasico": 270000,
             "immunocal_platinum": 370000,
@@ -209,7 +220,10 @@
             "optimizer_performance": 125000
         };
 
-        // --- NUEVO: Función para calcular y mostrar el total ---
+        // Obtén la referencia al elemento donde se muestra el total
+        const totalPedidoDisplay = document.getElementById('total-pedido-display');
+
+        // Función para calcular y mostrar el total
         function actualizarTotal() {
             let costoTotal = 0;
             sliders.forEach(slider => {
@@ -219,7 +233,6 @@
                 costoTotal += cantidad * precioUnitario;
             });
 
-            // Formatea el número como moneda colombiana (sin decimales)
             const formatoMoneda = new Intl.NumberFormat('es-CO', {
                 style: 'currency',
                 currency: 'COP',
@@ -227,24 +240,35 @@
                 maximumFractionDigits: 0
             });
             
-            document.getElementById('total-pedido-display').textContent = formatoMoneda.format(costoTotal);
+            if (totalPedidoDisplay) { // Asegura que el elemento existe antes de manipularlo
+                totalPedidoDisplay.textContent = formatoMoneda.format(costoTotal);
+            } else {
+                console.error("Error: Elemento con ID 'total-pedido-display' no encontrado en el DOM.");
+            }
         }
 
-        // --- LÓGICA MODIFICADA ---
-        // Ahora, cada vez que un slider se mueve, actualizamos su número y el total general.
+        // Actualiza el display de cantidad y el total general cuando un slider se mueve
         sliders.forEach(slider => {
             slider.addEventListener('input', function() {
                 const displayId = this.getAttribute('data-display');
-                document.getElementById(displayId).textContent = this.value;
-                actualizarTotal(); // <--- Llamada a la nueva función
+                const quantityDisplayElement = document.getElementById(displayId);
+                if (quantityDisplayElement) {
+                    quantityDisplayElement.textContent = this.value;
+                } else {
+                    console.error(`Error: Elemento con ID '${displayId}' no encontrado.`);
+                }
+                actualizarTotal();
             });
         });
 
+        // Llama a actualizarTotal() al cargar la página para mostrar el total inicial
+        actualizarTotal();
+
+        // Lógica del Envío del Formulario
         const pedidoForm = document.getElementById('pedido-form');
         pedidoForm.addEventListener('submit', function(event) {
-            event.preventDefault();
+            event.preventDefault(); // Previene el envío tradicional del formulario
             
-            // La lógica de validación y envío se mantiene igual que antes
             let totalQuantity = 0;
             const productosSeleccionados = [];
             sliders.forEach(slider => {
@@ -266,28 +290,35 @@
 
             if (totalQuantity === 0) {
                 alert('Por favor, selecciona una cantidad de al menos un producto para poder realizar el pedido.');
-                return; 
+                return; // Detiene el envío si no hay productos seleccionados
             }
             
             const formData = new FormData(pedidoForm);
             const datosCliente = {};
+            // Mapea los campos del formulario a un objeto para el payload
             ['nombre', 'apellido', 'correo', 'celular', 'direccion', 'fecha_pedido'].forEach(key => {
                 datosCliente[key] = formData.get(key);
             });
             
+            // Construye el payload que se enviará a n8n
             const payload = {
-                ...datosCliente,
+                ...datosCliente, // Incluye nombre, apellido, correo, celular, direccion, fecha_pedido
                 productos: productosSeleccionados,
                 resumen_pedido: productosSeleccionados.map(p => ` - ${p.producto} (x${p.cantidad})`).join('\n'),
-                costo_total_pedido: productosSeleccionados.reduce((total, p) => total + p.precio_total, 0)
+                costo_total_pedido: productosSeleccionados.reduce((total, p) => total + p.precio_total, 0) // El costo total calculado
             };
             
-            const webhookUrl = 'https://immunoexito-n8n.ucnwvo.easypanel.host/webhook/immunoexito';
+            // URL de tu Webhook de n8n
+            // ¡¡¡REEMPLAZA ESTA URL CON LA URL DE PRODUCCIÓN DE TU WEBHOOK DE N8N!!!
+            const webhookUrl = 'https://immunoexito-n8n.ucnwvo.easypanel.host/webhook/immunoexito'; 
+            
             const submitButton = pedidoForm.querySelector('.submit-btn');
             
+            // Deshabilita el botón y cambia el texto mientras se envía
             submitButton.textContent = 'Enviando...';
             submitButton.disabled = true;
 
+            // Envía los datos a n8n
             fetch(webhookUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -295,17 +326,30 @@
             })
             .then(response => {
                 if (response.ok) {
+                    // Si la respuesta es OK (2xx), muestra el mensaje de agradecimiento
                     document.getElementById('form-wrapper').style.display = 'none';
                     document.getElementById('thank-you-message').style.display = 'block';
                 } else {
-                    alert('Hubo un error al registrar tu pedido. Por favor, inténtalo de nuevo.');
-                    submitButton.textContent = 'Finalizar y Enviar Pedido';
-                    submitButton.disabled = false;
+                    // Si hay un error HTTP (ej. 404, 500 de n8n), intenta obtener más detalles
+                    console.error('Error HTTP:', response.status, response.statusText);
+                    // Intenta parsear la respuesta como JSON si el servidor envía detalles del error
+                    return response.json().then(errorData => {
+                        console.error('Detalles del error del servidor:', errorData);
+                        alert('Hubo un error al registrar tu pedido. Por favor, inténtalo de nuevo.');
+                        submitButton.textContent = 'Finalizar y Enviar Pedido';
+                        submitButton.disabled = false;
+                    }).catch(() => {
+                        // Si la respuesta no es JSON o no se puede parsear
+                        alert('Hubo un error al registrar tu pedido (el servidor no proporcionó detalles). Por favor, inténtalo de nuevo.');
+                        submitButton.textContent = 'Finalizar y Enviar Pedido';
+                        submitButton.disabled = false;
+                    });
                 }
             })
             .catch(error => {
+                // Captura errores de red u otros problemas de fetch (ej. sin internet)
                 console.error('Error de conexión:', error);
-                alert('Hubo un error de conexión. Por favor, revisa tu internet e inténtalo de nuevo.');
+                alert('Hubo un error de conexión. Por favor, revisa tu conexión a internet e inténtalo de nuevo.');
                 submitButton.textContent = 'Finalizar y Enviar Pedido';
                 submitButton.disabled = false;
             });
